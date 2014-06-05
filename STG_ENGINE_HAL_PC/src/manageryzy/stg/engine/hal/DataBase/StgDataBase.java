@@ -36,8 +36,8 @@ public class StgDataBase {
 		try {
 			stat.executeUpdate("CREATE TABLE IF NOT EXISTS config (name, value);");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			Logger.getGlobal().log(Level.WARNING, "ERROR in Creating Table in DataBase!");
 		}
 		
 		loadConfig();
@@ -52,6 +52,7 @@ public class StgDataBase {
 					.prepareStatement("insert into config values (?, ?);");
 			
 			
+			@SuppressWarnings("rawtypes")
 			Iterator it=StgConfig.theConfig.ConfigMap.keySet().iterator();    
 			while(it.hasNext()){    
 			     String key;    

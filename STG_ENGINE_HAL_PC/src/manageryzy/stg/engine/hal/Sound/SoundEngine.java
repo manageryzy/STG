@@ -1,7 +1,6 @@
 package manageryzy.stg.engine.hal.Sound;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -12,9 +11,13 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 
+
+/*the engine of the sound like shooting or booming
+ * @author manageryzy
+ * */
 public class SoundEngine {
 	Map<String,SoundEffect> SoundMap = null;
 	
@@ -61,34 +64,60 @@ public class SoundEngine {
 	
 	class SoundEffect
 	{
-		Clip clip;
+		//notice: the data of the sound did not loaded in the memory!
+		//it is just in the hard disk!These code do not work effectly!
+		//I tried to control buffer by myself but it don't work at all
+		//TODO:Load the sound effect into memory! or it would take a lot 
+		//of time to read the disk
+		File file;
+		
 		public SoundEffect(String FileName) throws Exception
 		{
-			try {
-				File file=new File(FileName);
-				AudioInputStream stream=AudioSystem.getAudioInputStream(file);
-				AudioFormat format=stream.getFormat();
-				DataLine.Info info=new DataLine.Info(Clip.class, format);
-				clip=(Clip)AudioSystem.getLine(info);
-				clip.open(stream);
-			} catch (UnsupportedAudioFileException | IOException
-					| LineUnavailableException e) {
-				Logger.getGlobal().log(Level.WARNING, "error in loading sound "+FileName);
-				e.getMessage();
-				e.printStackTrace();
-				throw e;
-			}
+			file=new File(FileName);
 		}
 		
-		public void play()
+		public void play() throws Exception
 		{
 			try {
+				DataLine.Info info;
+				AudioInputStream stream;
+				AudioFormat format;
+				stream=AudioSystem.getAudioInputStream(file);
+				format=stream.getFormat();
+				info=new DataLine.Info(Clip.class, format);
+				
+				Clip clip=(Clip)AudioSystem.getLine(info);
+				
+				clip.open(stream);
+				clip.setMicrosecondPosition(0);
+				
+				MyListener listener = new MyListener();	
+				clip.addLineListener(listener);
+				
 				clip.start();
+				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw e;
 			}
+			
+		}
+		
+		class MyListener implements LineListener
+		{
+
+			@Override
+			public void update(LineEvent event) {
+				if(event.getType()==LineEvent.Type.STOP)
+				{ 
+
+					Clip clip=(Clip)event.getSource();
+
+					clip.close();
+				}
+
+			}
+			
 		}
 	}
 }

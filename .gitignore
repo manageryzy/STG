@@ -5,4 +5,5 @@
 /jogamp-all-platforms/
 *.class
 *.apk
+*.wav
 !.gitignore
