@@ -18,24 +18,26 @@ public class Luncher {
 		StgHal.theStgHal.SoundEffect.LoadSound("Sound1", "se_powerup.wav");
 		StgHal.theStgHal.BGMEngine.addMusic("Music1", "´ºÉ«Ð¡¾¶ ¡« Colorful Path.wav", 0, 0);
 		StgHal.theStgHal.SoundEffect.PlaySound("Sound1");
-		StgHal.theStgHal.BGMEngine.Play("Music1");
+		StgHal.theStgHal.BGMEngine.PlayAtOnce("Music1");
 		
 		try {
 			Thread.currentThread();
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+//		StgHal.theStgHal.BGMEngine.Stop(5000, 10000);
 		StgHal.theStgHal.SoundEffect.PlaySound("Sound1");
 		
 		try {
 			Thread.currentThread();
-			Thread.sleep(200);
+			Thread.sleep(20000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 //		StgHal.theStgHal.SoundEffect.PlaySound("Sound1");
 //		StgHal.theStgHal.SoundEffect.PlaySound("Sound1");
 		StgHal.theStgHal.initWindow("STG game");

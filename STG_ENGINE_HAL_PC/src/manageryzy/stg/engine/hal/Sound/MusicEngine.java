@@ -30,7 +30,7 @@ public class MusicEngine {
 	AudioFormat format;
 	Clip clip;
 	Timer DelayTimer,EffectTimer1,EffectTimer2;
-	int Volume=0;
+	float Volume=0;
 	
 	public MusicEngine()
 	{
@@ -67,10 +67,10 @@ public class MusicEngine {
 		
 		if(this.clip!=null)
 		{
-			EffectTimer1.scheduleAtFixedRate(new FadeOut(FadeOutTime), delay, 10);
+			EffectTimer1.scheduleAtFixedRate(new FadeOut(FadeOutTime), delay,10);
 			EffectTimer2.scheduleAtFixedRate(new FadeIn(FadeInTime), delay+FadeOutTime, 10);
 		}
-		DelayTimer.schedule(new ChangeMusicTask(BGM,FadeInTime), delay+FadeOutTime);
+		DelayTimer.schedule(new ChangeMusicTask(BGM,FadeInTime),( delay+FadeOutTime));
 		
 		return true;
 	}
@@ -93,8 +93,10 @@ public class MusicEngine {
 			return false;
 		}
 		
-		DelayTimer.schedule(new StopMusic(), delay);
+		DelayTimer.schedule(new StopMusic(), (delay+FadeOutTime));
 		EffectTimer1.scheduleAtFixedRate(new FadeOut(FadeOutTime),FadeOutTime,10);
+		//Notice: It seems that there is something wrong in the time controling.
+		//TODO:Fix it
 		return true;
 	}
 	
@@ -133,6 +135,7 @@ public class MusicEngine {
 				clip.setLoopPoints(BGM.startPos, BGM.endPos);
 			
 			clip.start();
+			Logger.getGlobal().log(Level.INFO, "BGM CHANGED!");
 		} catch (UnsupportedAudioFileException | IOException
 				| LineUnavailableException e) {
 			Logger.getGlobal().log(Level.WARNING, "Error in Changing the BGM!");
@@ -145,15 +148,17 @@ public class MusicEngine {
 	
 	class FadeIn extends TimerTask{ 
 		int effectTime;
+		int RunningCount;
 		public FadeIn(int t)
 		{
 			effectTime=t;
+			RunningCount=0;
 		}
 		
         @Override
         public void run() { 
-        	long nowTime=this.scheduledExecutionTime();
-        	Volume=(int)(100.0*nowTime/effectTime);
+        	long nowTime=RunningCount++*10;
+        	Volume=(float)(-(50.0*nowTime/effectTime)+1.0);
         	FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         	volume.setValue(Volume);
         	if(nowTime>effectTime)
@@ -163,17 +168,21 @@ public class MusicEngine {
 	
 	class FadeOut extends TimerTask{ 
 		int effectTime;
+		int RunningCount;
 		public FadeOut(int t)
 		{
 			effectTime=t;
+			RunningCount=0;
 		}
 		
 		@Override
         public void run() {
-        	long nowTime=this.scheduledExecutionTime();
-        	Volume=100-(int)(100.0*nowTime/effectTime);
+        	long nowTime=RunningCount++*10;
         	FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        	Volume=(float)(1.0-(50.0*nowTime/effectTime));
+
         	volume.setValue(Volume);
+
         	if(nowTime>effectTime)
         		this.cancel();
         }
@@ -198,6 +207,7 @@ public class MusicEngine {
         @Override
         public void run() { 
         	if(clip!=null)
+        		Logger.getGlobal().log(Level.INFO, "BGM STOP!");
         		clip.stop();
         }
     }
