@@ -1,7 +1,7 @@
 package manageryzy.stg.game.android;
 
 
-import manageryzy.stg.engine.hal.GameActvity;
+import manageryzy.stg.engine.hal.basicDrawing.*;
 import manageryzy.stg.game.android.util.SystemUiHider;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
 				
 				try {
 					Intent intent = new Intent();
-					intent.setClass(getApplicationContext(), GameActvity.class);
+					intent.setClass(getApplicationContext(), GameActivity.class);
 					startActivity(intent);
 					finish();
 				} catch (Exception e) {

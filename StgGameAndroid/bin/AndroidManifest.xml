@@ -5,18 +5,13 @@
     <application android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" android:theme="@style/AppTheme">
-        <activity
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
-            android:name="manageryzy.stg.game.android.MainActivity" android:theme="@style/FullscreenTheme">
+        <!--created by a at 2014-06-03 20:14:44-->
+        <activity android:name="MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="manageryzy.stg.engine.hal.GameActvity"/>
-        <activity android:name="test.test"/>
-        <!--created by a at 2014-06-03 20:14:44-->
-        <activity android:name="testa.test"/>
+        <activity android:name="manageryzy.stg.engine.hal.basicDrawing.GameActivity"></activity>
     </application>
 </manifest>

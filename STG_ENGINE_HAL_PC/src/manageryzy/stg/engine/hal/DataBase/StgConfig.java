@@ -37,12 +37,12 @@ public class StgConfig {
 	
 	public boolean saveConfig()
 	{
-		if(StgHal.GameDataBase==null)
+		if(StgHal.theStgHal.GameDataBase==null)
 		{
 			Logger.getGlobal().log(Level.WARNING, "the DataBase Engine is not working!");
 			return false;
 		}
-		if(!StgHal.GameDataBase.saveConfig())
+		if(!StgHal.theStgHal.GameDataBase.saveConfig())
 			return false;
 		return true;
 	}

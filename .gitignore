@@ -3,4 +3,6 @@
 /jogl_demo/
 /obj_android/
 /jogamp-all-platforms/
+*.class
+*.apk
 !.gitignore

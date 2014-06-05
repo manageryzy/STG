@@ -2,178 +2,157 @@ package manageryzy.stg.engine.hal.basicDrawing;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import OBJLoader.OBJModel;
-import android.opengl.GLSurfaceView.Renderer;
+import com.blubee.ObjLoader.*;
 
-public class MyRenderer implements Renderer {
-    // 关于0x10000注明:Thus 0x10000 means a hexadecimal memory address 10000
-    // 就像cai_huan25大哥说的，大家把它理解为google画图单位就ok 
-    static int one = 0x10000;
-    // Int型的缓冲区，下面定义了四个分别是三角形，正方形，三角形颜色，正方形颜色的缓冲区 
-    private static IntBuffer triangleBuffer;
-    private static IntBuffer quaterBuffer;
-    private static IntBuffer color1Buffer;
-    private static IntBuffer color2Buffer;
-    // 三角形顶点，分别对应x,y,z,因此程序为二维，所以z轴上皆为0
-    private int[] vertices = new int[] { 
-            0, one, 0,
-            -one, -one, 0,
-            one, -one, 0 
-    };
-    //以正方形为例，说明坐标轴：坐标中心位于正方形中心，下面四个顶点分别是右上角，左上角，右下角，左下角 
-    private int[] quater = new int[] { 
-            one, one, 0,
-            -one, one, 0,
-            one, -one, 0,
-            -one, -one, 0 
-    };
-    //定义每个顶点的颜色，每个顶点的颜色皆由(r,g,b,a)
-    //三角形各顶点颜色(三个顶点)
-    private int[] color = new int[] { 
-            one, 0, 0,one,
-            0, one,0, one,
-            0,0,one, one 
-    };
-    //正方形各顶点颜色(4个顶点)
-    private int[] color2 = new int[] { 
-            one, 0, 0, 0,
-            one, one, 0, 0,
-            one,one,one, 0,
-            0, one, one, 0 
-    };
-    
-    OBJModel modle;
+import manageryzy.stg.engine.hal.android.R;
+import android.content.Context;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+import android.opengl.Matrix;
+import android.os.SystemClock;
+import android.util.Log;
 
-    //实现Renderer接口的方法onDrawFrame
-    @Override
-    public void onDrawFrame(GL10 gl) {
-        //因为在glVertexPointer或者是glColorPointer方法中要求传入一个直接的Buffer，
-        //所以下面的vbb1,vbb2,colorvbb1,colorvbb2皆为创建一个直接的Buffer
-        //以第一个为例说明，首先用ByteBuffer的allocateDirect方法来分配新的直接字节缓冲区。
-        //因1个Int有4个byte，所以将vertices的长度乘以4
-        // order(ByteOrder.nativeOrder)方法以本机字节顺序来修改此缓冲区的字节顺序
-        //然后用asIntBuffer方法创建此字节缓冲区的视图，作为 int 缓冲区。
-        //put方法将给定 int 写入此缓冲区的当前位置，然后该位置递增。 
-        //position方法设置此缓冲区的位置。如果标记已定义并且大于新的位置，则要丢弃该标记。 
+public class MyRenderer implements GLSurfaceView.Renderer{
+
+	Context context;
+	int fn = 0;
+	int bb = 0;
+	ObjLoader loader;
+	int sProgram, vShader, fShader, posHandle, modMatHandle, viewMatHandle, projMatHandle, textureHandle, texCoordHandle, texId;
+	float[] modMat, viewMat, projMat;
+	
+	float[] verts = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+	
+	short[] ind = {0, 1, 2};
+	FloatBuffer vertsBuff;
+	ShortBuffer indicesBuff;
+	
+	public MyRenderer(Context context)
+	{
+		this.context = context;
+		loader = new ObjLoader(context);
+		loader.load(R.raw.monkey);
+		verts = loader.vtx;
+		vertsBuff = ByteBuffer.allocateDirect(verts.length*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+		vertsBuff.put(verts).position(0);
+		
+		indicesBuff = ByteBuffer.allocateDirect(ind.length*2).order(ByteOrder.nativeOrder()).asShortBuffer();
+		indicesBuff.put(ind).position(0);
+		
+		modMat = new float[16];
+		viewMat = new float[16];
+		projMat = new float[16];
+	}
+	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+		Log.v("renderer", "on surfacecreated");
+		final float eyeX = 0.0f;
+        final float eyeY = 0.0f;
+        final float eyeZ = 3.0f;
+        final float centerX = 0.0f;
+        final float centerY = 0.0f;
+        final float centerZ = 0.0f;
+        final float upX = 0.0f;
+        final float upY = 1.0f;
+        final float upZ = 0.0f;
         
-        // triangle的ByteBuffer
-        ByteBuffer vbb1 = ByteBuffer.allocateDirect(vertices.length * 4);
-        vbb1.order(ByteOrder.nativeOrder());
-        triangleBuffer = vbb1.asIntBuffer();
-        triangleBuffer.put(vertices);
-        triangleBuffer.position(0);
+        Matrix.setLookAtM(viewMat, 0, eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+        
+		vShader = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
+		GLES20.glShaderSource(vShader, vCode);
+		GLES20.glCompileShader(vShader);
 
-        // quater的ByteBuffer
-        ByteBuffer vbb2 = ByteBuffer.allocateDirect(quater.length * 4);
-        vbb2.order(ByteOrder.nativeOrder());
-        quaterBuffer = vbb2.asIntBuffer();
-        quaterBuffer.put(quater);
-        quaterBuffer.position(0);
+		fShader = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);
+		GLES20.glShaderSource(fShader, fCode);
+		GLES20.glCompileShader(fShader);
 
-        // color的ByteBuffer
-        ByteBuffer colorvbb1 = ByteBuffer.allocateDirect(color.length * 4);
-        colorvbb1.order(ByteOrder.nativeOrder());
-        color1Buffer = colorvbb1.asIntBuffer();
-        color1Buffer.put(color);
-        color1Buffer.position(0);
+		sProgram = GLES20.glCreateProgram();
+		GLES20.glAttachShader(sProgram, vShader);
+		GLES20.glAttachShader(sProgram, fShader);
+		GLES20.glLinkProgram(sProgram);
 
-        // color2的ByteBuffer
-        ByteBuffer colorvbb2 = ByteBuffer.allocateDirect(color2.length * 4);
-        colorvbb2.order(ByteOrder.nativeOrder());
-        color2Buffer = colorvbb2.asIntBuffer();
-        color2Buffer.put(color2);
-        color2Buffer.position(0);
+		posHandle = GLES20.glGetAttribLocation(sProgram, "aPos");
+		texCoordHandle = GLES20.glGetAttribLocation(sProgram, "aTexPos");
+		
+		modMatHandle = GLES20.glGetUniformLocation(sProgram, "uModMat");
+		viewMatHandle = GLES20.glGetUniformLocation(sProgram, "uViewMat");
+		projMatHandle = GLES20.glGetUniformLocation(sProgram, "uProjMat");
+		textureHandle = GLES20.glGetUniformLocation(sProgram, "texture");
+	}
 
-        // 绘制Triangles
-        // 清除屏幕和深度缓存
-        gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
-        // 重置当前的模型观察矩阵
-        gl.glLoadIdentity();
+	public void onSurfaceChanged(GL10 gl, int width, int height) {
+		Log.v("renderer", "on surfacechanged "+width+" "+height);
+		GLES20.glViewport(0, 0, width, height);
+		final float ratio = (float)width/height;
+		final float left = -ratio;
+		final float right = ratio;
+		final float bottom = -1.0f;
+		final float top = 1.0f;
+		final float near = 1.0f;
+		final float far = 100.0f;
+		Matrix.frustumM(projMat, 0, left, right, bottom, top, near, far);
+		
+		GLES20.glUseProgram(sProgram);
+		GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		
+	}
 
-        //以下两步为绘制颜色与顶点前必做操作
-        //(颜色可采用另一种简单方式，说见http://blog.csdn.net/Simdanfeg/archive/2011/03/17/6255932.aspx)
-        // 允许设置顶点
-        //GL10.GL_VERTEX_ARRAY顶点数组
-        gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
-        // 允许设置颜色
-        //GL10.GL_COLOR_ARRAY颜色数组
-        gl.glEnableClientState(GL10.GL_COLOR_ARRAY);
+	public void onDrawFrame(GL10 gl) {
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+		
+		long time = SystemClock.uptimeMillis() % 10000L;
+        float angleInDegrees = (360.0f / 10000.0f) * ((int) time);
+        
+		Matrix.setIdentityM(modMat, 0);
+		Matrix.translateM(modMat, 0, 0.0f, 0.0f, -1.0f);
+		Matrix.rotateM(modMat, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
+		
+		//vertsBuff.position(0);
+		//GLES20.glVertexAttribPointer(posHandle, 3, GLES20.GL_FLOAT, false, 0, vertsBuff);
+		loader.vertsBuffer.position(0);
+		GLES20.glVertexAttribPointer(posHandle, 3, GLES20.GL_FLOAT, false, 0, loader.vertsBuffer);
+        GLES20.glEnableVertexAttribArray(posHandle);
+        
+        GLES20.glUniformMatrix4fv(modMatHandle, 1, false, modMat, 0);
+        GLES20.glUniformMatrix4fv(viewMatHandle, 1, false, viewMat, 0);
+        GLES20.glUniformMatrix4fv(projMatHandle, 1, false, projMat, 0);
+	
+        GLES20.glUniform1i(textureHandle, 0);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, loader.numFaces*3, GLES20.GL_UNSIGNED_SHORT, loader.indicesBuffer);
+        //GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, loader.numFaces*3);
+       
+	}
+	
+	private final String vCode = 
+			  "uniform mat4 uModMat;            \n"
+			+ "uniform mat4 uViewMat;           \n"
+			+ "uniform mat4 uProjMat;           \n"
+			+ "attribute vec4 aPos;             \n"
+			+ "attribute vec4 aCol;             \n"
+			+ "attribute vec2 aTexPos;          \n"
+			+ "varying vec2 vTexPos;            \n"
+			+ "varying vec4 vCol;               \n"
+			+ "void main(){                     \n"
+			+ " vCol = aCol;                    \n"
+			+ " mat4 mv = uViewMat * uModMat;   \n"
+			+ " mat4 mvp = uProjMat * mv;       \n"
+			//+ " gl_Position =  aPos;          \n"
+			+ " vTexPos = aTexPos;              \n"
+			+ " gl_Position = mvp * aPos;       \n"
+			+ " }                               \n";
 
-        // 左移1.5单位，并移入屏幕6.0
-        gl.glTranslatef(-1.5f, 0.0f, -6.0f);
-
-        //GL_FIXED,GL_FLOAT,GL_UNSIGNED_BYTE
-        //更多信息见  http://www.devx.com/wireless/Article/32879/1954
-        //参数中的GL_FIXED表示我们之前定义的one为单位长度 
-        // 设置三角形
-        gl.glVertexPointer(3, GL10.GL_FIXED, 0, triangleBuffer);
-        // 设置三角形颜色
-        gl.glColorPointer(4, GL10.GL_FIXED, 0, color1Buffer);
-        // 绘制三角形
-        //GL10.GL_TRIANGLES:把每三个顶点作为一个独立的三角形。顶点3n-2，3n-1和3n定义了第n个三角形，总共绘制N/3个三角形。 
-        gl.glDrawArrays(GL10.GL_TRIANGLES, 0, 3);
-
-        // 重置当前模型的观察矩阵
-        gl.glLoadIdentity();
-
-        // 左移1.5单位，并移入屏幕6.0
-        gl.glTranslatef(1.5f, 0.0f, -6.0f);
-        // 设置正方形
-        gl.glVertexPointer(3, GL10.GL_FIXED, 0, quaterBuffer);
-        // 设置正方形颜色
-        gl.glColorPointer(4, GL10.GL_FIXED, 0, color2Buffer);
-        //GL_TRIANGLE_STRIP：绘制一组相连的三角形。对于奇数点n，顶点n，n+1和n+2定义了第n个三角形；
-        //对于偶数n，顶点n+1，n和n+2定义了第n个三角形，总共绘制N-2个三角形。 
-        // 绘制正方形
-        gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, 4);
-
-        // 取消颜色设置
-        gl.glDisableClientState(GL10.GL_COLOR_ARRAY);
-        // 取消顶点设置
-        gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
-
-    }
-
-    //实现Renderer接口的方法onSurfaceChanged
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        float ratio = (float) width / height;
-        // 设置OpenGL场景的大小,(0,0)表示窗口内部视口的左下角，(w,h)指定了视口的大小 
-        gl.glViewport(0, 0, width, height);
-        // 设置投影矩阵
-        gl.glMatrixMode(GL10.GL_PROJECTION);
-        // 重置投影矩阵
-        gl.glLoadIdentity();
-        // 设置视口的大小
-        gl.glFrustumf(-ratio, ratio, -1, 1, 1, 10);
-        //以下两句告诉opengl es，以后所有的变换都将影响这个模型(即我们绘制的图形)
-        gl.glMatrixMode(GL10.GL_MODELVIEW);
-        gl.glLoadIdentity();
-    }
-
-    //实现Renderer接口的方法onSurfaceCreated
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
-    	modle=new OBJModel("heli", 4.0, gl, true);
-        // 告诉系统对透视进行修正(选择效率优先还是速度优先，这里我们选择速度优先)
-        gl.glHint(GL10.GL_PERSPECTIVE_CORRECTION_HINT, GL10.GL_FASTEST);
-        // 用黑色来清除屏幕颜色
-        gl.glClearColor(0, 0, 0, 0);
-        // 启用阴影平滑
-        gl.glShadeModel(GL10.GL_SMOOTH);
-
-        // 设置深度缓存
-        gl.glClearDepthf(1.0f);
-        // 启用深度测试
-        gl.glEnable(GL10.GL_DEPTH_TEST);
-        // 所做深度测试的类型
-        gl.glDepthFunc(GL10.GL_LEQUAL);
-
-    }
+	private final String fCode = 
+			  "precision mediump float;        \n"
+			+ "uniform sampler2D texture;      \n"
+			+ "varying vec4 vCol;              \n"
+			+ "varying vec2 vTexPos;           \n"
+			+ "void main(){                    \n"
+			+ " gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);       \n"
+			//+ " gl_FragColor = texture2D(texture, vTexPos);  \n"
+			+ " }                              \n";
 }
