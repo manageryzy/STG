@@ -30,7 +30,7 @@ public class MusicEngine {
 	AudioFormat format;
 	Clip clip;
 	Timer DelayTimer,EffectTimer1,EffectTimer2,VolumeTimer;
-	float Volume=0;
+	public float Volume=0;
 	
 	public MusicEngine()
 	{
@@ -197,7 +197,7 @@ public class MusicEngine {
 	/**
 	 * check whether the BGM is Playing
 	 * @return
-	 * return ture if BGM is playing
+	 * return true if BGM is playing
 	 * @author manageryzy
 	 */
 	public boolean isPlaying()
