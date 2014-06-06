@@ -3,6 +3,7 @@
 /jogl_demo/
 /obj_android/
 /jogamp-all-platforms/
+/*/bin/*
 *.class
 *.apk
 *.wav
