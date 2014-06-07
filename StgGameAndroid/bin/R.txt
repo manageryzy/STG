@@ -3,9 +3,14 @@ int attr buttonBarStyle 0x7f010000
 int color black_overlay 0x7f070000
 int drawable ic_launcher 0x7f020000
 int id dummy_button 0x7f080002
+int id filedialogitem_img 0x7f080004
+int id filedialogitem_name 0x7f080005
+int id filedialogitem_path 0x7f080006
 int id fullscreen_content 0x7f080000
 int id fullscreen_content_controls 0x7f080001
+int id vw1 0x7f080003
 int layout activity_main 0x7f030000
+int layout filedialogitem 0x7f030001
 int raw cube 0x7f040000
 int raw cube1 0x7f040001
 int raw monkey 0x7f040002
