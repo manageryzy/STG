@@ -34,12 +34,14 @@ public class ModJarLoader {
 	{
 		modList=new ArrayList<modInfo>();
 		String FileName=StgConfig.theConfig.getConfig("ModListPath");
-		File ModListFile=new File(FileName);
-		
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		File ModListFile;
+		DocumentBuilderFactory dbf ;
 		DocumentBuilder db;
 		Document doc = null;
+		
 		try {
+			ModListFile=new File(FileName);
+			dbf = DocumentBuilderFactory.newInstance();
 			db = dbf.newDocumentBuilder();
 			doc = db.parse(ModListFile);
 			doc.normalize();
@@ -115,7 +117,7 @@ public class ModJarLoader {
 		return null;
 	}
 	
-	class modInfo
+	public class modInfo
 	{
 		public String Path;
 		public String Cls;

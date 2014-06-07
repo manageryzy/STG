@@ -18,6 +18,8 @@ public class StgConfig {
 		
 		this.addConfig("ifAskFullScreen", "false");
 		this.addConfig("ifFullScreen", "false");
+		
+		this.addConfig("ModListPath", "StgMod.xml");
 	}
 	
 	public String getConfig(String name)

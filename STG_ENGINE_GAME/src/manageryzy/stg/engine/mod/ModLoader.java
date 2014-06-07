@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 import manageryzy.stg.engine.MessageSystem.STGMessage;
 import manageryzy.stg.engine.MessageSystem.StgEvent;
+import manageryzy.stg.engine.modloader.ModJarLoader;
 
 /**
  * @author manageryzy
@@ -17,7 +18,7 @@ public class ModLoader {
 	public static ModLoader theModLoader;
 	Map<String,Mods> ModsList;
 	
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public ModLoader()
 	{
 		ModsList=new HashMap<String,Mods>();
@@ -52,7 +53,27 @@ public class ModLoader {
 		
 		
 		//load the other mods of the game
-		
+		ModJarLoader JarLoader=new ModJarLoader();
+		for(int i=0;i<JarLoader.modList.size();i++)
+		{
+			Class modClass=ModJarLoader.LoadJar(JarLoader.modList.get(i).Path, JarLoader.modList.get(i).Cls);
+			if(modClass!=null)
+			{
+				modClass.getAnnotation(StgMod.class);//check whether the class is a mod
+			}
+			
+			Mods TheMod	=new Mods(modClass);
+			try {
+				if(TheMod.getEventListener().invoke(TheMod,new STGMessage(new StgEvent("onModLoad", null), this, null)).equals(true))
+				{
+					ModsList.put(TheMod.GetModID(), TheMod);
+					
+				}
+			} catch (Exception e) {
+				
+				e.printStackTrace();
+			}
+		}
 		
 	}
 	
