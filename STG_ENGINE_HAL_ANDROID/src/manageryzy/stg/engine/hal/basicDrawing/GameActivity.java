@@ -1,5 +1,6 @@
 package manageryzy.stg.engine.hal.basicDrawing;
 
+import manageryzy.stg.engine.hal.StgHal;
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
@@ -14,6 +15,8 @@ public class GameActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StgHal.theStgHal=new StgHal(getApplicationContext());
+
         Log.v("main activity", "constructor");
         mView = new GLSurfaceView(this); 
         mView.setEGLContextClientVersion(2);

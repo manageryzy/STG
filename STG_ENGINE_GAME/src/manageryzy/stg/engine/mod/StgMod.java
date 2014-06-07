@@ -19,4 +19,14 @@ public @interface StgMod  {
 	String ModName() default "UnNamedMod";
 	String Version() default "0";
 	String Author() default "nobody";
+	
+	/**
+	 * will be called when the mod is loaded
+	 * @return
+	 * return true if succeed or the game system will not load it
+	 */
+	String ModEventListener() default "onModEvent";
+	
+	
+	
 }

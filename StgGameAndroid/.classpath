@@ -9,5 +9,7 @@
 	<classpathentry exported="true" kind="lib" path="D:/git/STG_ENGINE/jogamp-all-platforms/jar/joal-android.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/git/STG_ENGINE/jogamp-all-platforms/jar/jocl-android.jar"/>
 	<classpathentry exported="true" kind="lib" path="D:/git/STG_ENGINE/jogamp-all-platforms/jar/jogl-all-android.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/STG_ENGINE_GAME"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/TouHouSTG"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

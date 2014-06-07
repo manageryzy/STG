@@ -3,7 +3,9 @@ package manageryzy.game.stg;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import manageryzy.stg.engine.GameMain.StgGameMain;
 import manageryzy.stg.engine.hal.StgHal;
+import manageryzy.stg.engine.*;
 
 public class Luncher {
 
@@ -20,7 +22,8 @@ public class Luncher {
 //		StgHal.theStgHal.BGMEngine.addMusic("Music2", "¾¿˜O¤ÎÕæŒg¡¡¡« the Ultimate Truth.wav", 0, 0);
 //		StgHal.theStgHal.SoundEffect.PlaySound("Sound1");
 //		StgHal.theStgHal.BGMEngine.PlayAtOnce("Music1");
-		StgHal.theStgHal.initWindow("STG game");
+//		StgHal.theStgHal.initWindow("STG game");
+		StgGameMain.GameMainThread();
 		Logger.getGlobal().log(Level.INFO, "luncher exit");
 		
 	}
