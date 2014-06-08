@@ -67,7 +67,7 @@ public class ModJarLoader {
 				
 				if(modNode.getNodeName().equals("modPath"))
 				{
-					ModPath=modNode.getNodeValue();
+					ModPath=modNode.getFirstChild().getNodeValue();
 					if(ModClass!=null)
 					{
 						modList.add(new modInfo(ModPath,ModClass));
@@ -76,7 +76,7 @@ public class ModJarLoader {
 				
 				if(modNode.getNodeName().equals("modClass"))
 				{
-					ModClass=modNode.getNodeValue();
+					ModClass=modNode.getFirstChild().getNodeValue();
 					if(ModPath!=null)
 					{
 						modList.add(new modInfo(ModPath,ModClass));
