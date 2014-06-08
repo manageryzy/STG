@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <mod>
-   <modPath>asdasd</modPath>
-   <modClass>asd</modClass>
+   <modPath>exampleMod.jar</modPath>
+   <modClass>manageryzy.stg.example.mod.example</modClass>
 </mod>
