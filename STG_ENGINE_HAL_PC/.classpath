@@ -5,5 +5,6 @@
 	<classpathentry kind="lib" path="D:/git/STG_ENGINE/jogamp-all-platforms/jar/jogl-all.jar"/>
 	<classpathentry kind="lib" path="D:/git/STG_ENGINE/jogamp-all-platforms/jar/gluegen.jar"/>
 	<classpathentry kind="lib" path="D:/git/STG_ENGINE/STG_ENGINE_HAL_PC/sqlite-jdbc-3.7.2.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/STG_ENGINE_GAME"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

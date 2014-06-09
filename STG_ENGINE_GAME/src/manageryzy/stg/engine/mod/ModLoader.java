@@ -1,11 +1,7 @@
 package manageryzy.stg.engine.mod;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import manageryzy.stg.engine.MessageSystem.STGMessage;
 import manageryzy.stg.engine.MessageSystem.StgEvent;
 import manageryzy.stg.engine.modloader.ModJarLoader;
@@ -34,7 +30,7 @@ public class ModLoader {
 			e.getMessage();
 			e.getCause();
 			e.printStackTrace();
-			Logger.getGlobal().log(Level.WARNING,"Failed to load the main mod! The Engine is going to exit!");
+			System.err.print("Failed to load the main mod! The Engine is going to exit!\n");
 			System.exit(-1);
 		}
 		
@@ -43,7 +39,11 @@ public class ModLoader {
 			if(MainMod.getEventListener().invoke(MainModClass,new STGMessage(new StgEvent("onModLoad", null), this, null)).equals(true))
 			{
 				ModsList.put("MainMod", MainMod);
-				
+			}
+			else
+			{
+				System.err.print("Main mod didn't loaded correctly! The Engine is going to exit!");
+				System.exit(-1);
 			}
 		} catch (Exception e) {
 			
@@ -66,11 +66,14 @@ public class ModLoader {
 			try {
 				if(TheMod.getEventListener().invoke(TheMod,new STGMessage(new StgEvent("onModLoad", null), this, null)).equals(true))
 				{
-					ModsList.put(TheMod.GetModID(), TheMod);
-					
+					ModsList.put(TheMod.GetModID(), TheMod);	
+				}
+				else
+				{
+					System.err.print(TheMod.GetModName()+" didn't loaded correctly!\n");
 				}
 			} catch (Exception e) {
-				
+				System.err.print("Something wrong when loading other mods.\n");
 				e.printStackTrace();
 			}
 		}
