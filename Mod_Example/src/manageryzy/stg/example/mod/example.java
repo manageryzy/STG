@@ -15,6 +15,7 @@ public class example {
 	@STGMessageListener
 	public static boolean onModEvent(STGMessage msg) {
 		System.out.print("Example Mod Loaded \n");
+		example2 exp2=new example2();
 		return true;
 	}
 }
