@@ -14,7 +14,7 @@ import manageryzy.stg.engine.MessageSystem.STGMessage;
  */
 public class Mods {
 	public Class<?> TheMod;
-	public Mods(Class mainMod)
+	public Mods(Class<?> mainMod)
 	{
 		TheMod=mainMod;
 	}

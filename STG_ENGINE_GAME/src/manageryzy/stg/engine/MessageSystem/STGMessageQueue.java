@@ -1,14 +1,11 @@
 package manageryzy.stg.engine.MessageSystem;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-
-import javax.sound.midi.Receiver;
 
 /**
  * you could use it to post message without waiting it is dealed
@@ -21,12 +18,12 @@ public class STGMessageQueue {
 	
 	
 	/**
-	 * the message queue for the mods
+	 * the message queue for the Mods Message Pipeline
 	 */
 	public static STGMessageQueue ModMessageQueue=new STGMessageQueue();
 	
 	/**
-	 * the message queue for Objects in the world
+	 * the message queue i for Objects Message Pipeline in the world
 	 */
 	public static STGMessageQueue ObjectMessageQueue=new STGMessageQueue();
 	
@@ -82,6 +79,15 @@ public class STGMessageQueue {
 		return true;
 	}
 	
+	/**
+	 * post message in the message queue
+	 * @param ifCheckHook
+	 * if the engine should check hooks like the object message pipeline
+	 * it should be true.But in he mod message pipeline ,it should be false.
+	 * @deprecated 
+	 * this method should be called by engine.You should not call it by yourself.
+	 * @author manageryzy
+	 */
 	public void postMessage(boolean ifCheckHook)
 	{
 		
@@ -98,7 +104,9 @@ public class STGMessageQueue {
 			return ;
 		}
 		
+		this.lock();
 		STGMessage nowDealingMessage=MessageQueue.poll();
+		this.unlock();
 		if(nowDealingMessage==null)
 		{
 			System.err.print("unexpected null pointer!\n");
@@ -126,7 +134,7 @@ public class STGMessageQueue {
 		}
 		
 		try {
-			if(theReceiver.method.invoke(theReceiver.Obj, nowDealingMessage.getEvent()).equals(false))
+			if(theReceiver.method.invoke(theReceiver.Obj, nowDealingMessage).equals(false))
 				return false;
 		} catch (Exception e) {
 			System.err.print("Error:some thing wrong in dealing message\n");
@@ -135,6 +143,16 @@ public class STGMessageQueue {
 		}
 		
 		return true;
+	}
+	
+	public void lock()
+	{
+		canAddMessage = false;
+	}
+	
+	public void unlock ()
+	{
+		canAddMessage = true;
 	}
 	
 	

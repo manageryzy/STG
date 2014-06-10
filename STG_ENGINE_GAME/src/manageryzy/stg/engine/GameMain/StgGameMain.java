@@ -1,5 +1,6 @@
 package manageryzy.stg.engine.GameMain;
 
+import manageryzy.stg.engine.MessageSystem.STGMessageQueue;
 import manageryzy.stg.engine.mod.ModLoader;
 
 public final class StgGameMain {
@@ -14,13 +15,13 @@ public final class StgGameMain {
 		//start the message poster loop
 		MessagePosterThread = new Thread(new Runnable() { 
             
-            @Override 
+            @SuppressWarnings("deprecation")
+			@Override 
             public void run() { 
                 for(int i = 0;i<10;i++) 
                 { 
                     try { 
-                        Thread.sleep(500); 
-                        System.out.println("Thread running :"+i+"!");  
+                        STGMessageQueue.ObjectMessageQueue.postMessage(true);
                     } catch (Exception e) {
                     	System.err.print("something wrong in the messgae loop");
                     	e.getCause();

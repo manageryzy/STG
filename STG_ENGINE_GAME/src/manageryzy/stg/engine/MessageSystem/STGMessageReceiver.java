@@ -9,16 +9,16 @@ import java.util.Map;
  * @author manageryzy
  *
  */
-@SuppressWarnings("rawtypes")
 public class STGMessageReceiver {
 	public static STGMessageReceiver theReceiverList=new STGMessageReceiver();
 	
 	Map<Object,Receiver> ReceiverList;
+	boolean canWrite;
 	
 	public STGMessageReceiver()
 	{
 		ReceiverList=new HashMap<Object,Receiver>();
-		
+		canWrite=true;
 	}
 	
 	/**
@@ -67,6 +67,29 @@ public class STGMessageReceiver {
 	
 	
 	/**
+	 * unsubscribe message
+	 * @param obj
+	 * the object who used to be an subscriber
+	 * @return
+	 * return true if succeed
+	 * @author manageryzy
+	 */
+	public boolean unsubscribe(Object obj)
+	{
+		if(!this.isObjectListening(obj))
+		{
+			System.err.print("failed to unsubscribe for the object do not exist!\n");
+			return false;
+		}
+		
+		this.lock();
+		this.ReceiverList.remove(obj);
+		this.unlock();
+		return true;
+	}
+	
+	
+	/**
 	 * hook the message
 	 * @param targetObject
 	 * the target object who will be hooked
@@ -104,6 +127,8 @@ public class STGMessageReceiver {
 			return false;
 		}
 		
+		while(!this.canWrite);
+		
 		r.HookedReceiver=newReceiver;
 		
 		ReceiverList.put(targetObject, r);
@@ -121,6 +146,16 @@ public class STGMessageReceiver {
 	public Receiver getReceiver(Object obj)
 	{
 		return ReceiverList.get(obj);
+	}
+	
+	public void lock()
+	{
+		this.canWrite=false;
+	}
+	
+	public void unlock()
+	{
+		this.canWrite=false;
 	}
 	
 	public class Receiver
