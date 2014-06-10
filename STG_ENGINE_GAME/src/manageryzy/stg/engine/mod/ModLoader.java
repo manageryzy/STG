@@ -46,8 +46,10 @@ public class ModLoader {
 				System.exit(-1);
 			}
 		} catch (Exception e) {
-			
+			e.getCause();
 			e.printStackTrace();
+			System.err.print("Main mod didn't loaded correctly! The Engine is going to exit!");
+			System.exit(-1);
 		}
 		
 		

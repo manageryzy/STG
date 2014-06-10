@@ -1,12 +1,11 @@
-import java.lang.annotation.Annotation;
-
 import manageryzy.stg.engine.MessageSystem.STGMessage;
 import manageryzy.stg.engine.MessageSystem.STGMessageListener;
 import manageryzy.stg.engine.MessageSystem.STGMessageReceiver;
+import manageryzy.stg.engine.mod.MainGameModHere;
 import manageryzy.stg.engine.mod.StgMod;
 
 
-@StgMod(ModID = "THE_MAIN_MOD")
+@StgMod(ModID = "MAIN_GAME_MOD")
 public class THE_MAIN_GAME_MOD {
 
 	@STGMessageListener

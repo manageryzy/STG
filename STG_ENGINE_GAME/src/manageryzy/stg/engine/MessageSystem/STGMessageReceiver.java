@@ -1,9 +1,7 @@
 package manageryzy.stg.engine.MessageSystem;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -113,6 +111,17 @@ public class STGMessageReceiver {
 		return true;
 	}
 	
+	/**
+	 * return the receiver object of the listener
+	 * @param obj
+	 * the object of the listener
+	 * @return
+	 * return null if failed
+	 */
+	public Receiver getReceiver(Object obj)
+	{
+		return ReceiverList.get(obj);
+	}
 	
 	public class Receiver
 	{

@@ -1,7 +1,7 @@
 package manageryzy.stg.engine.MessageSystem;
 
 /**
- * the class if the message
+ * the class of the message
  * @author manageryzy
  * @see #getEvent() 
  * @see #getSource()

@@ -11,12 +11,6 @@ public final class StgGameMain {
 	
 	public static void GameMainThread()
 	{
-		
-		
-		//load the mods 
-		ModLoader.theModLoader = new ModLoader();
-		
-		
 		//start the message poster loop
 		MessagePosterThread = new Thread(new Runnable() { 
             
@@ -36,5 +30,9 @@ public final class StgGameMain {
             } 
         }); 
 		MessagePosterThread.start(); 
+		
+
+		//load the mods 
+		ModLoader.theModLoader = new ModLoader();
 	}
 }

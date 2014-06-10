@@ -1,11 +1,14 @@
 package manageryzy.stg.engine.MessageSystem;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import javax.sound.midi.Receiver;
 
 /**
  * you could use it to post message without waiting it is dealed
@@ -76,6 +79,61 @@ public class STGMessageQueue {
 		STGMessage message=new STGMessage(eventObj, from, to);
 		
 		this.MessageQueue.add(message);
+		return true;
+	}
+	
+	public void postMessage(boolean ifCheckHook)
+	{
+		
+		if(MessageQueue.isEmpty())//if there is no message,delay and return 
+		{
+			try{
+				Thread.sleep(10);
+			}
+			catch(Exception e)
+			{
+				e.getCause();
+				e.printStackTrace();
+			}
+			return ;
+		}
+		
+		STGMessage nowDealingMessage=MessageQueue.poll();
+		if(nowDealingMessage==null)
+		{
+			System.err.print("unexpected null pointer!\n");
+			return;
+		}
+		
+		if(!STGMessageReceiver.theReceiverList.isObjectListening(nowDealingMessage.Target))
+		{
+			System.err.print("Unexpected error:the target object do not listen message!\n");
+			return;
+		}
+		
+		STGMessageReceiver.Receiver theReceiver=STGMessageReceiver.theReceiverList.getReceiver(nowDealingMessage.Target);
+		
+		doPostMessage(theReceiver,nowDealingMessage);
+		
+	}
+	
+	boolean doPostMessage(STGMessageReceiver.Receiver theReceiver,STGMessage nowDealingMessage)
+	{
+		if(theReceiver.HookedReceiver!=null)
+		{
+			if(doPostMessage(theReceiver.HookedReceiver,nowDealingMessage)==false)
+				return false;
+		}
+		
+		try {
+			if(theReceiver.method.invoke(theReceiver.Obj, nowDealingMessage.getEvent()).equals(false))
+				return false;
+		} catch (Exception e) {
+			System.err.print("Error:some thing wrong in dealing message\n");
+			e.getCause();
+			e.printStackTrace();
+		}
+		
 		return true;
 	}
 	
