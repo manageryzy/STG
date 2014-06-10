@@ -12,7 +12,7 @@ public class THE_MAIN_GAME_MOD {
 	@STGMessageListener
 	public static boolean onModEvent(STGMessage msg) {
 		System.out.print("Mod Loaded \n");
-		STGMessageReceiver.Subscribe(new THE_MAIN_GAME_MOD(),"onElseEvent");
+		STGMessageReceiver.theReceiverList.Subscribe(new THE_MAIN_GAME_MOD(),"onElseEvent");
 		return true;
 	}
 	
