@@ -8,3 +8,5 @@
 *.apk
 *.wav
 !.gitignore
+!/jogamp-all-platforms/jar/*
+/git@121.251.255.51/
