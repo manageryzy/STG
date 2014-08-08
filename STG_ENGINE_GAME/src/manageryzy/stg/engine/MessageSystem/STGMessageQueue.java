@@ -23,7 +23,7 @@ public class STGMessageQueue {
 	public static STGMessageQueue ModMessageQueue=new STGMessageQueue();
 	
 	/**
-	 * the message queue i for Objects Message Pipeline in the world
+	 * the message queue for Objects Message Pipeline in the world
 	 */
 	public static STGMessageQueue ObjectMessageQueue=new STGMessageQueue();
 	
@@ -32,10 +32,13 @@ public class STGMessageQueue {
 	 */
 	public boolean canAddMessage ;
 	
+	
+	
 	Queue<STGMessage> MessageQueue=null;
 	List<Object> MessageListeners=null;
 	
 	Map<String,Object> MessageListenerName=null;
+	Map<String,STGMessageReceiver> MessageSeparator=null;
 	
 	/**
 	 * init the message queue
@@ -46,6 +49,7 @@ public class STGMessageQueue {
 		this.MessageQueue=new LinkedList<STGMessage>();
 		this.MessageListeners=new ArrayList<Object>();
 		this.MessageListenerName= new HashMap<String,Object>();
+		this.MessageSeparator=new HashMap<String,STGMessageReceiver>();
 		canAddMessage=true;
 	}
 	
@@ -76,6 +80,9 @@ public class STGMessageQueue {
 		STGMessage message=new STGMessage(eventObj, from, to);
 		
 		this.MessageQueue.add(message);
+		
+		STGMessageWait.Notify(STGMessagePosterLoop.MessagePosterThread, STGMessagePosterLoop.MessagePosterThread);
+		
 		return true;
 	}
 	
@@ -87,8 +94,9 @@ public class STGMessageQueue {
 	 * @deprecated 
 	 * this method should be called by engine.You should not call it by yourself.
 	 * @author manageryzy
+	 * @return return true if the queue was not empty
 	 */
-	public void postMessage(boolean ifCheckHook)
+	public boolean postMessage(boolean ifCheckHook)
 	{
 		
 		if(MessageQueue.isEmpty())//if there is no message,delay and return 
@@ -101,7 +109,7 @@ public class STGMessageQueue {
 				e.getCause();
 				e.printStackTrace();
 			}
-			return ;
+			return false;
 		}
 		
 		this.lock();
@@ -110,19 +118,22 @@ public class STGMessageQueue {
 		if(nowDealingMessage==null)
 		{
 			System.err.print("unexpected null pointer!\n");
-			return;
+			return true;
 		}
 		
-		if(!STGMessageReceiver.theReceiverList.isObjectListening(nowDealingMessage.Target))
+		STGMessageReceiver theReceiverList = this.getReceiver(nowDealingMessage.theEvent.EventType);
+		
+		if(!theReceiverList.isObjectListening(nowDealingMessage.Target))
 		{
 			System.err.print("Unexpected error:the target object do not listen message!\n");
-			return;
+			return true;
 		}
 		
-		STGMessageReceiver.Receiver theReceiver=STGMessageReceiver.theReceiverList.getReceiver(nowDealingMessage.Target);
+		STGMessageReceiver.Receiver theReceiver=theReceiverList.getReceiver(nowDealingMessage.Target);
 		
 		doPostMessage(theReceiver,nowDealingMessage);
 		
+		return true;
 	}
 	
 	boolean doPostMessage(STGMessageReceiver.Receiver theReceiver,STGMessage nowDealingMessage)
@@ -145,12 +156,30 @@ public class STGMessageQueue {
 		return true;
 	}
 	
-	public void lock()
+	public STGMessageReceiver getReceiver(String event)
+	{
+		return MessageSeparator.get(event);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public boolean Subscribe(String MessageType,Object subscriber,String MethodName)
+	{
+		STGMessageReceiver receiver = MessageSeparator.get(MessageType);
+		if(receiver==null)
+		{
+			receiver = new STGMessageReceiver();
+			MessageSeparator.put(MessageType, receiver);
+		}
+		if(!receiver.Subscribe(subscriber, MethodName))return false;
+		return true;
+	}
+	
+	protected void lock()
 	{
 		canAddMessage = false;
 	}
 	
-	public void unlock ()
+	protected void unlock ()
 	{
 		canAddMessage = true;
 	}

@@ -13,7 +13,8 @@ public class THE_MAIN_GAME_MOD {
 	public static boolean onModEvent(STGMessage msg) {
 		System.out.print("Mod Loaded \n");
 		THE_MAIN_GAME_MOD m = new THE_MAIN_GAME_MOD();
-		STGMessageReceiver.theReceiverList.Subscribe(m,"onElseEvent");
+//		STGMessageReceiver.theReceiverList.Subscribe(m,"onElseEvent");
+		STGMessageQueue.ObjectMessageQueue.Subscribe("init", m, "onElseEvent");
 		STGMessageQueue.ObjectMessageQueue.addEvent(new StgEvent("init", null), null,m);
 		return true;
 	}

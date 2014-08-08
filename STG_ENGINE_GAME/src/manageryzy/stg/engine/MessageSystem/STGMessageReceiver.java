@@ -10,7 +10,7 @@ import java.util.Map;
  *
  */
 public class STGMessageReceiver {
-	public static STGMessageReceiver theReceiverList=new STGMessageReceiver();
+//	public static STGMessageReceiver theReceiverList=new STGMessageReceiver();
 	
 	Map<Object,Receiver> ReceiverList;
 	boolean canWrite;
@@ -32,7 +32,10 @@ public class STGMessageReceiver {
 	 * @param MethodName
 	 * the name of the method who receive message.<p>
 	 * <b>notice:</b> although nowadays,it is useless to add @STGMessageListener
-	 * but
+	 * you'd better to add it
+	 * @deprecated
+	 * in the new message system , you should call the method in STGMessageQueue .
+	 * this method would be called by system.
 	 * @return
 	 * return true if succeed
 	 */

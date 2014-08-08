@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import manageryzy.stg.engine.GameMain.StgGameMain;
 import manageryzy.stg.engine.hal.StgHal;
-import manageryzy.stg.engine.*;
 
 public class Luncher {
 
