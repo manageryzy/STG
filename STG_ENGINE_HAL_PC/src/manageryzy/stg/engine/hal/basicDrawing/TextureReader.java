@@ -1,26 +1,26 @@
 package manageryzy.stg.engine.hal.basicDrawing;
 
-import com.jogamp.opengl.util.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.PixelGrabber;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+
+import javax.imageio.ImageIO;
+
+import com.jogamp.common.nio.Buffers;
 //import 
-  
-import com.jogamp.common.nio.Buffers; 
-import javax.imageio.ImageIO;  
-import java.awt.image.BufferedImage;  
-import java.awt.image.PixelGrabber;  
-import java.io.IOException;  
-import java.nio.ByteBuffer;  
   
 /** 
  * Image loading class that converts BufferedImages into a data 
  * structure that can be easily passed to OpenGL. 
  * @author Pepijn Van Eeckhoudt 
- * Í¼Æ¬µ¼ÈëÀà£º½«Î»Í¼×ª»¯ÎªOpenGLÈÝÒ×¶ÁÈ¡µÄÊÇÊý¾Ý¸ñÊ½ 
+ * Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½à£ºï¿½ï¿½Î»Í¼×ªï¿½ï¿½ÎªOpenGLï¿½ï¿½ï¿½×¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½Ê½ 
  */  
 public class TextureReader {  
     /** 
-     * Í¨¹ýÎÄ¼þÃû¶ÁÈ¡ÎÆÀí 
-     * @param filename ÎÄ¼þµÄÂ·¾¶Ãû 
-     * @return ÎÆÀíÐÅÏ¢ 
+     * Í¨ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ 
+     * @param filename ï¿½Ä¼ï¿½ï¿½ï¿½Â·ï¿½ï¿½ï¿½ï¿½ 
+     * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ 
      * @throws IOException 
      */  
     public static Texture readTexture(String filename) throws IOException {  
@@ -38,7 +38,7 @@ public class TextureReader {
     }  
   
     /** 
-     * ¶ÁÈ¡Í¼Æ¬µ½ BufferedImage 
+     * ï¿½ï¿½È¡Í¼Æ¬ï¿½ï¿½ BufferedImage 
      * @param resourceName 
      * @return 
      * @throws IOException 
@@ -48,31 +48,31 @@ public class TextureReader {
     }  
   
     /** 
-     * ¶ÁÈ¡ÏñËØÐÅÏ¢ 
-     * @param img Òª¶ÁÈ¡µÄÍ¼Æ¬ 
-     * @param storeAlphaChannel ÊÇ·ñÓÐAlpha Í¨µÀ 
+     * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ 
+     * @param img Òªï¿½ï¿½È¡ï¿½ï¿½Í¼Æ¬ 
+     * @param storeAlphaChannel ï¿½Ç·ï¿½ï¿½ï¿½Alpha Í¨ï¿½ï¿½ 
      * @return 
      */  
     private static Texture readPixels(BufferedImage img, boolean storeAlphaChannel) {  
         int[] packedPixels = new int[img.getWidth() * img.getHeight()];  
   
         /** 
-         * ´´½¨Ò»¸ö PixelGrabber ¶ÔÏó£¬ÒÔ´ÓÖ¸¶¨ Img ËùÉú³ÉµÄÍ¼ÏñÖÐ½«ÏñËØ¾ØÐÎ²¿·Ö (x, y, w, h) ×¥È¡µ½¸ø¶¨µÄÊý×é£¨packedPixels£©ÖÐ¡£ 
+         * ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ PixelGrabber ï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ö¸ï¿½ï¿½ Img ï¿½ï¿½ï¿½ï¿½Éµï¿½Í¼ï¿½ï¿½ï¿½Ð½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Î²ï¿½ï¿½ï¿½ (x, y, w, h) ×¥È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é£¨packedPixelsï¿½ï¿½ï¿½Ð¡ï¿½ 
          */  
         PixelGrabber pixelgrabber = new PixelGrabber(img, 0, 0, img.getWidth(), img.getHeight(), packedPixels, 0, img.getWidth());  
         try {  
-            //ÇëÇó Image »ò ImageProducer ¿ªÊ¼´«µÝÏñËØ£¬²¢µÈ´ý´«µÝÍêÏà¹Ø¾ØÐÎÖÐµÄËùÓÐÏñËØ  
+            //ï¿½ï¿½ï¿½ï¿½ Image ï¿½ï¿½ ImageProducer ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø£ï¿½ï¿½ï¿½ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  
             pixelgrabber.grabPixels();  
         } catch (InterruptedException e) {  
             throw new RuntimeException();  
         }  
   
-        //Èç¹ûÎª4Í¨µÀ ÔòËµÃ÷³ýÁËRGB »¹ÓÐ alpha Öµ ·ñÔòÖ»ÓÐ RGBÖµ  
+        //ï¿½ï¿½ï¿½Îª4Í¨ï¿½ï¿½ ï¿½ï¿½Ëµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½RGB ï¿½ï¿½ï¿½ï¿½ alpha Öµ ï¿½ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ RGBÖµ  
         int bytesPerPixel = storeAlphaChannel ? 4 : 3;  
-        //½¨Á¢Ò»¸öÐÂµÄ½â°üµÄÏñËØ»º³åÇø  
+        //ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ÂµÄ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø»ï¿½ï¿½ï¿½ï¿½ï¿½  
         ByteBuffer unpackedPixels = Buffers.newDirectByteBuffer(packedPixels.length * bytesPerPixel);  
   
-        //½«imgÖÐµÄRGBµÄÕûÐÎÖµ ×ª»»Îª ByteÀàÐÍµÄ Êý¾Ý»º³å  
+        //ï¿½ï¿½imgï¿½Ðµï¿½RGBï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ ×ªï¿½ï¿½Îª Byteï¿½ï¿½ï¿½Íµï¿½ ï¿½ï¿½Ý»ï¿½ï¿½ï¿½  
         for (int row = img.getHeight() - 1; row >= 0; row--) {  
             for (int col = 0; col < img.getWidth(); col++) {  
                 int packedPixel = packedPixels[row * img.getWidth() + col];  
@@ -85,7 +85,7 @@ public class TextureReader {
             }  
         }  
   
-        //½«»º³åÇøÖÐµÄÊý¾Ý·´×ª  
+        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Ý·ï¿½×ª  
         unpackedPixels.flip();  
   
   
@@ -93,19 +93,19 @@ public class TextureReader {
     }  
   
     /** 
-     * ÓÃÀ´´æ´¢ÎÆÀíÐÅÏ¢µÄÀà 
+     * ï¿½ï¿½ï¿½ï¿½ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ 
      */  
     public static class Texture {  
         /** 
-         * ÏñËØ 
+         * ï¿½ï¿½ï¿½ï¿½ 
          */  
         private ByteBuffer pixels;  
         /** 
-         * ¿í 
+         * ï¿½ï¿½ 
          */  
         private int width;  
         /** 
-         * ¸ß 
+         * ï¿½ï¿½ 
          */  
         private int height;  
   

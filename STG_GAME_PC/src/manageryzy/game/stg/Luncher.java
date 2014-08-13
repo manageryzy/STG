@@ -12,7 +12,6 @@ public class Luncher {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Logger.getGlobal().setLevel(Level.FINE);
 		Logger.getGlobal().log(Level.INFO, "luncher start");
 		StgHal.theStgHal=new StgHal("STG.db");
@@ -24,7 +23,7 @@ public class Luncher {
 //		StgHal.theStgHal.initWindow("STG game");
 		StgGameMain.GameMainThread();
 		Logger.getGlobal().log(Level.INFO, "luncher exit");
-		
+		System.exit(0);
 	}
 
 }

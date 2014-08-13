@@ -1,7 +1,6 @@
 import manageryzy.stg.engine.MessageSystem.STGMessage;
 import manageryzy.stg.engine.MessageSystem.STGMessageListener;
 import manageryzy.stg.engine.MessageSystem.STGMessageQueue;
-import manageryzy.stg.engine.MessageSystem.STGMessageReceiver;
 import manageryzy.stg.engine.MessageSystem.StgEvent;
 import manageryzy.stg.engine.mod.StgMod;
 

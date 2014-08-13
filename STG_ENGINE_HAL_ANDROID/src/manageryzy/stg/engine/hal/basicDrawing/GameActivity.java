@@ -3,17 +3,17 @@ package manageryzy.stg.engine.hal.basicDrawing;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.example.openfiledemo.CallbackBundle;
-import com.example.openfiledemo.OpenFileDialog;
-
+import manageryzy.stg.engine.GameMain.StgGameMain;
 import manageryzy.stg.engine.hal.StgHal;
-import manageryzy.stg.engine.hal.android.R;
 import android.app.Activity;
 import android.app.Dialog;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+
+import com.example.openfiledemo.CallbackBundle;
+import com.example.openfiledemo.OpenFileDialog;
 
 public class GameActivity extends Activity {
 	
@@ -36,7 +36,14 @@ public class GameActivity extends Activity {
         //rend.load(R.raw.monkey1);
         //rend.load(R.raw.cube1);
 	//this is a test edit        
-        showDialog(openfileDialogId);  
+//        showDialog(openfileDialogId);  
+        
+        new Thread(){  
+            public void run(){  
+            	StgGameMain.GameMainThread();
+            }  
+        }.start();  
+        
         setContentView(mView);
     }
 
@@ -78,17 +85,17 @@ public class GameActivity extends Activity {
     protected Dialog onCreateDialog(int id) {  
         if(id==openfileDialogId){  
             Map<String, Integer> images = new HashMap<String, Integer>();  
-            // ÏÂÃæ¼¸¾äÉèÖÃ¸÷ÎÄ¼þÀàÐÍµÄÍ¼±ê£¬ ÐèÒªÄãÏÈ°ÑÍ¼±êÌí¼Óµ½×ÊÔ´ÎÄ¼þ¼Ð  
-//            images.put(OpenFileDialog.sRoot, R.drawable.filedialog_root);   // ¸ùÄ¿Â¼Í¼±ê  
-//            images.put(OpenFileDialog.sParent, R.drawable.filedialog_folder_up);    //·µ»ØÉÏÒ»²ãµÄÍ¼±ê  
-//            images.put(OpenFileDialog.sFolder, R.drawable.filedialog_folder);   //ÎÄ¼þ¼ÐÍ¼±ê  
-//            images.put("wav", R.drawable.filedialog_wavfile);   //wavÎÄ¼þÍ¼±ê  
+            // ï¿½ï¿½ï¿½æ¼¸ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Íµï¿½Í¼ï¿½ê£¬ ï¿½ï¿½Òªï¿½ï¿½ï¿½È°ï¿½Í¼ï¿½ï¿½ï¿½ï¿½Óµï¿½ï¿½ï¿½Ô´ï¿½Ä¼ï¿½ï¿½ï¿½  
+//            images.put(OpenFileDialog.sRoot, R.drawable.filedialog_root);   // ï¿½ï¿½Ä¿Â¼Í¼ï¿½ï¿½  
+//            images.put(OpenFileDialog.sParent, R.drawable.filedialog_folder_up);    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Í¼ï¿½ï¿½  
+//            images.put(OpenFileDialog.sFolder, R.drawable.filedialog_folder);   //ï¿½Ä¼ï¿½ï¿½ï¿½Í¼ï¿½ï¿½  
+//            images.put("wav", R.drawable.filedialog_wavfile);   //wavï¿½Ä¼ï¿½Í¼ï¿½ï¿½  
 //            images.put(OpenFileDialog.sEmpty, R.drawable.filedialog_root);  
-            Dialog dialog = OpenFileDialog.createDialog(id, this, "´ò¿ªÎÄ¼þ", new CallbackBundle() {  
+            Dialog dialog = OpenFileDialog.createDialog(id, this, "ï¿½ï¿½ï¿½Ä¼ï¿½", new CallbackBundle() {  
                 @Override  
                 public void callback(Bundle bundle) {  
                     String filepath = bundle.getString("path");  
-                    setTitle(filepath); // °ÑÎÄ¼þÂ·¾¶ÏÔÊ¾ÔÚ±êÌâÉÏ  
+                    setTitle(filepath); // ï¿½ï¿½ï¿½Ä¼ï¿½Â·ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ú±ï¿½ï¿½ï¿½ï¿½ï¿½  
                 }  
             },   
             ".wav;",  

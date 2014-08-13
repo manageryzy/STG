@@ -26,12 +26,13 @@
 
 package OBJLoader;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 
-import javax.media.opengl.*;
-import com.jogamp.opengl.util.*;
-import com.jogamp.opengl.util.texture.*;
+import javax.media.opengl.GL2;
 
 
 
@@ -73,7 +74,7 @@ public class OBJModel
   } // end of OBJModel()
 
 
-  /**³õÊ¼»¯Ä£ÐÍµÄ¼¯ºÏ**/
+  /**ï¿½ï¿½Ê¼ï¿½ï¿½Ä£ï¿½ÍµÄ¼ï¿½ï¿½ï¿½**/
   private void initModelData(String modelNm)
   {
     verts = new ArrayList<Tuple3>();
@@ -85,7 +86,7 @@ public class OBJModel
   } 
 
 
-  /**¼ÓÔØÄ£ÐÍ**/
+  /**ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½**/
   private void loadModel(String modelNm)
   {
     String fnm = MODEL_DIR + modelNm + ".obj";

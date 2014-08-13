@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="STG_ENGINE_HAL_ANDROID">
+    <property environment="env"/>
+    <property name="STG_ENGINE_GAME.location" value="../STG_ENGINE_GAME"/>
+    <property name="ECLIPSE_HOME" value="../../../软件开发/android/adt-bundle-windows-x86_64-20130917/adt-bundle-windows-x86_64-20130917/eclipse2"/>
+    <property name="STG_ENGINE_HAL_ANDROID.location" value="."/>
+    <property name="STG_ENGINE_HAL_PC.location" value="../STG_ENGINE_HAL_PC"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="Android 4.3.libraryclasspath">
+        <pathelement location="../../../软件开发/android/adt-bundle-windows-x86_64-20130917/adt-bundle-windows-x86_64-20130917/sdk/platforms/android-18/android.jar"/>
+    </path>
+    <path id="Android Private Libraries.libraryclasspath">
+        <pathelement location="libs/android-support-v4.jar"/>
+    </path>
+    <path id="Android Dependencies.libraryclasspath"/>
+    <path id="STG_ENGINE_HAL_PC.classpath">
+        <pathelement location="${STG_ENGINE_HAL_PC.location}/bin"/>
+        <pathelement location="${STG_ENGINE_HAL_PC.location}/../jogamp-all-platforms/jar/jogl-all.jar"/>
+        <pathelement location="${STG_ENGINE_HAL_PC.location}/../jogamp-all-platforms/jar/gluegen.jar"/>
+        <pathelement location="${STG_ENGINE_HAL_PC.location}/sqlite-jdbc-3.7.2.jar"/>
+        <path refid="STG_ENGINE_GAME.classpath"/>
+    </path>
+    <path id="STG_ENGINE_GAME.classpath">
+        <pathelement location="${STG_ENGINE_GAME.location}/bin"/>
+        <path refid="STG_ENGINE_HAL_ANDROID.classpath"/>
+        <path refid="STG_ENGINE_HAL_PC.classpath"/>
+    </path>
+    <path id="STG_ENGINE_HAL_ANDROID.classpath">
+        <pathelement location="bin/classes"/>
+        <path refid="Android 4.3.libraryclasspath"/>
+        <path refid="Android Private Libraries.libraryclasspath"/>
+        <path refid="Android Dependencies.libraryclasspath"/>
+        <pathelement location="../jogamp-all-platforms/jar/gluegen-rt-android.jar"/>
+        <pathelement location="../jogamp-all-platforms/jar/joal-android.jar"/>
+        <pathelement location="../jogamp-all-platforms/jar/jocl-android.jar"/>
+        <pathelement location="../jogamp-all-platforms/jar/jogl-all-android.jar"/>
+        <path refid="STG_ENGINE_GAME.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin/classes"/>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="gen">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin/classes"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${STG_ENGINE_HAL_ANDROID.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${STG_ENGINE_GAME.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${STG_ENGINE_HAL_PC.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${STG_ENGINE_HAL_ANDROID.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+        <ant antfile="build.xml" dir="${STG_ENGINE_GAME.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+        <ant antfile="build.xml" dir="${STG_ENGINE_HAL_PC.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="gen"/>
+            <classpath refid="STG_ENGINE_HAL_ANDROID.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${STG_ENGINE_GAME.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${STG_ENGINE_GAME.location}" inheritAll="false" target="build">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+</project>

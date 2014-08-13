@@ -20,17 +20,23 @@ public class STGMessagePosterLoop
             public void run() { 
             	while(true) 
                 { 
-                    try { 
-                    	if(!STGMessageQueue.ObjectMessageQueue.postMessage(true))
-                    	{
-                    		//the message queue was empty!
-                    		STGMessageWait.Wait(this, this);
-                    	}
-                    } catch (Exception e) {
-                    	System.err.print("something wrong in the messgae loop");
-                    	e.getCause();
-                        e.printStackTrace(); 
-                    } 
+            		Thread thread = new Thread(new Runnable() {
+            			@Override 
+                        public void run() { 
+            				try { 
+            					if(!STGMessageQueue.ObjectMessageQueue.postMessage(true))
+            					{
+            						//the message queue was empty!
+            						STGMessageWait.Wait(this, this);
+            					}
+            				} catch (Exception e) {
+            					System.err.print("something wrong in the messgae loop");
+            					e.getCause();
+            					e.printStackTrace(); 
+            				} 
+            			}
+            		});
+            		thread.run();
                 } 
             } 
         }); 

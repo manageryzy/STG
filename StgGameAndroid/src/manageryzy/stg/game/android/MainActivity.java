@@ -1,12 +1,10 @@
 package manageryzy.stg.game.android;
 
 
-import manageryzy.stg.engine.hal.basicDrawing.*;
+import manageryzy.stg.engine.hal.basicDrawing.GameActivity;
 import manageryzy.stg.game.android.util.SystemUiHider;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
