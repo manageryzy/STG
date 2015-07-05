@@ -1,5 +1,0 @@
-<?xml version="1.0"?>
-<mod>
-   <modPath>exampleMod.jar</modPath>
-   <modClass>manageryzy.stg.example.mod.example</modClass>
-</mod>
